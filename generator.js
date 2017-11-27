@@ -63,8 +63,25 @@ function handleSortableUpdate (event, ui) {
 function setupCourses(courses) {
   courses.forEach(function (course){
     $('#sortable1')
-    .append(`<li class="list-group-item" data-name="${course.name}" data-points="${course.points}"><b>${course.name}</b> (${course.points} op)</li>`);
+    .append(`<li class="list-group-item ${courseStyleByCategoryId(course.category)}" data-name="${course.name}" data-points="${course.points}"><b>${course.name}</b> (${course.points} op)</li>`);
   });
+}
+
+function courseStyleByCategoryId(id) {
+  switch(id){
+    case 1:
+      return 'cat-style-basic';
+      break;
+    case 2:
+      return 'cat-style-core';
+      break;
+    case 3:
+      return 'cat-style-optional';
+      break;
+    default:
+      return 'cat-style-default';
+      break;
+  }
 }
 
 function setupSearch() {

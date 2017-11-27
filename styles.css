@@ -47,6 +47,8 @@ body {
 
 .list-group-item {
   cursor: move;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
 
 .float-right {
@@ -56,4 +58,20 @@ body {
 .panel-body {
   max-height: 90vh;
   overflow-y: scroll;
+}
+
+.cat-style-basic {
+  background-color: #BCD2C8;
+}
+
+.cat-style-core {
+  background-color: #D9A095;
+}
+
+.cat-style-optional {
+  background-color: #A36167;
+}
+
+.cat-style-default {
+  background-color: #F6F4F1;
 }
