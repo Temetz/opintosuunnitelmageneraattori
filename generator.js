@@ -2,56 +2,30 @@ requirejs(["courses"], function(courses) {
   setupCourses(courses);
   setupSortable();
   setupSearch();
+  setupAddBasicBtn();
 });
 
-function setupSortable () {
-  $( "#sortable1, #sortable2, #sortable3, #sortable4" ).sortable({
-      connectWith: ".connectedSortable",
-      update: handleSortableUpdate,
-    }).disableSelection();
-}
+function calculateAndSetSum(element) {
+  var targetSum = $(element)
+    .children()
+    .map(function(){
+      return $(this).data('points');
+    })
+    .toArray()
+    .reduce(function(a, b) { return a + b; }, 0);
 
-function handleSortableUpdate (event, ui) {
-  var target = event.target;
-  var sender = ui.sender ? ui.sender[0] : undefined;
+  var targetListId = $(element).attr('id');
 
-  if (target && sender) {
-    // TARGET
-    var targetSum = $(target)
-      .children()
-      .map(function(){
-        return $(this).data('points');
-      })
-      .toArray()
-      .reduce(function(a, b) { return a + b; }, 0);
+  $(`#${targetListId}_points`)
+    .data('points', targetSum)
+    .text(`${targetSum} op`);
+};
 
-    var targetListId = $(target).attr('id');
-
-    $(`#${targetListId}_points`)
-      .data('points', targetSum)
-      .text(`${targetSum} op`);
-
-    // SENDER
-    var senderSum = $(sender)
-      .children()
-      .map(function(){
-        return $(this).data('points');
-      })
-      .toArray()
-      .reduce(function(a, b) { return a + b; }, 0);
-
-    var senderListId = $(sender).attr('id');
-
-    $(`#${senderListId}_points`)
-      .data('points', senderSum)
-      .text(`${senderSum} op`);
-  }
-
-  //TOTALS
+function calculateAndSetTotalSum(){
   var totalSum = $('#sortable2_points, #sortable3_points, #sortable4_points')
     .map(function(){
-        return $(this).data('points');
-      })
+      return $(this).data('points');
+    })
     .toArray()
     .reduce(function(a, b) { return a + b; }, 0);
 
@@ -60,12 +34,16 @@ function handleSortableUpdate (event, ui) {
     .text(`${totalSum} op`);
 };
 
-function setupCourses(courses) {
-  courses.forEach(function (course){
-    $('#sortable1')
-    .append(`<li class="list-group-item ${courseStyleByCategoryId(course.category)}" data-name="${course.name}" data-points="${course.points}"><b>${course.name}</b> (${course.points} op)</li>`);
-  });
-}
+function handleSortableUpdate (event, ui) {
+  var target = event.target;
+  var sender = ui.sender ? ui.sender[0] : undefined;
+
+  if (target && sender) {
+    calculateAndSetSum(target);
+    calculateAndSetSum(sender);
+    calculateAndSetTotalSum();
+  }
+};
 
 function courseStyleByCategoryId(id) {
   switch(id){
@@ -82,7 +60,21 @@ function courseStyleByCategoryId(id) {
       return 'cat-style-default';
       break;
   }
-}
+};
+
+function setupSortable () {
+  $( "#sortable1, #sortable2, #sortable3, #sortable4" ).sortable({
+      connectWith: ".connectedSortable",
+      update: handleSortableUpdate,
+    }).disableSelection();
+};
+
+function setupCourses(courses) {
+  courses.forEach(function (course){
+    $('#sortable1')
+    .append(`<li class="list-group-item ${courseStyleByCategoryId(course.category)}" data-name="${course.name}" data-category="${course.category}" data-points="${course.points}"><b>${course.name}</b> (${course.points} op)</li>`);
+  });
+};
 
 function setupSearch() {
   $('#search').keyup(function(){
@@ -98,11 +90,26 @@ function setupSearch() {
       .children()
       .each(function(){
         var nodename = $(this).data('name');
-        var regexp = new RegExp(''+ searchString +'', 'i');
+        var regexp = new RegExp(searchString, 'i');
 
         if(regexp.test(nodename)) {
           $(this).show();
         }
       });
   });
-}
+};
+
+function setupAddBasicBtn() {
+  $('#btnAddBasic')
+    .click(function(){
+      $('#sortable1')
+        .children("[data-category='1']")
+        .show()
+        .each(function(){
+          $('#sortable2').append(this);
+        });
+
+      calculateAndSetSum($('#sortable2'));
+      calculateAndSetTotalSum();
+    });
+};

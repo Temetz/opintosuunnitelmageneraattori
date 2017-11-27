@@ -6,6 +6,7 @@
   <title>JAMK opintosuunnitelmageneraattori</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
   <link rel="stylesheet" href="styles.css">
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
   <!--[if lt IE 9]>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
   <![endif]-->
@@ -18,19 +19,29 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.5/require.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
   <script src="generator.js"></script>
+  <nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#">
+          <img class="navbar-logo" alt="JAMK opintosuunnitelmageneraattori" src="logo.png">
+        </a>
+      </div>
+    </div>
+  </nav>
   <div id="wrapper">
     <div id="courseListContainer">
       <div class="panel panel-primary">
         <div class="panel-heading">Kurssitarjonta</div>
-        <div class="panel-body">
+        <div>
           <div class="form-group has-feedback">
-              <i class="glyphicon glyphicon-search form-control-feedback"></i>
-              <input type="text" id="search" class="form-control" placeholder="Haku..." />
-              <span class="label label-default cat-style-basic">Perusopinnot</span>
-              <span class="label label-default cat-style-core">Ydinopinnot</span>
-              <span class="label label-default cat-style-optional">Valinnaiset</span>
-          </div>
-
+                <i class="glyphicon glyphicon-search form-control-feedback"></i>
+                <input type="text" id="search" class="form-control" placeholder="Haku..." />
+                <span class="label label-default cat-style-basic">Perusopinnot</span>
+                <span class="label label-default cat-style-core">Ydinopinnot</span>
+                <span class="label label-default cat-style-optional">Valinnaiset</span>
+            </div>
+        </div>
+        <div class="panel-body">
           <ul class="list-group connectedSortable" id="sortable1">
           </ul>
         </div>
@@ -40,7 +51,7 @@
       <div class="panel panel-primary" id="selectedCoursesPanel">
         <div class="panel-heading">
           Valitut kurssit
-          <span class="float-right" id="total_points" data-points="0">0 op</span>
+          <span class="float-right badge" id="total_points" data-points="0">0 op</span>
         </div>
         <div class="panel-body">
 
@@ -48,7 +59,8 @@
           <div class="panel panel-info">
             <div class="panel-heading">
               Perusopinnot
-              <span class="float-right" id="sortable2_points" data-points="0">0 op</span>
+              <span class="float-right badge" id="sortable2_points" data-points="0">0 op</span>
+              <button id="btnAddBasic" type="button" class="btn btn-primary btn-xs float-right margin-right">Lisää kaikki perusopinnot</button>
             </div>
             <div class="panel-body">
               <ul class="list-group connectedSortable" id="sortable2">
@@ -60,7 +72,7 @@
           <div class="panel panel-info">
             <div class="panel-heading">
               Ydinopinnot
-              <span class="float-right" id="sortable3_points" data-points="0">0 op</span>
+              <span class="float-right badge" id="sortable3_points" data-points="0">0 op</span>
             </div>
             <div class="panel-body">
               <ul class="list-group connectedSortable" id="sortable3">
@@ -72,7 +84,7 @@
           <div class="panel panel-info">
             <div class="panel-heading">
               Valinnaiset
-              <span id="sortable4_points" data-points="0">0 op</span>
+              <span class="float-right badge" id="sortable4_points" data-points="0">0 op</span>
             </div>
             <div class="panel-body">
               <ul class="list-group connectedSortable" id="sortable4">
