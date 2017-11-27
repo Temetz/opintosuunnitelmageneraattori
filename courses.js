@@ -103,6 +103,16 @@ var courses = [{
       "points": 4,
       "category": 1
   },
+  {
+      "name": "Työharjoittelu",
+      "points": 30,
+      "category": 1
+  },
+  {
+      "name": "Opinnäytetyö ja kypsyysnäyte",
+      "points": 30,
+      "category": 1
+  },
 
 
   {

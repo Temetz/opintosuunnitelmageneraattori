@@ -35,9 +35,9 @@ body {
 }
 
 .connectedSortable {
-  background-color: #d9edf787;
-  min-height: 50px;
-  padding: 5px;
+  background-color: #d9edf7;
+  min-height: 200px;
+  padding: 15px 5px 50px 5px;
 }
 
 .panel-body {
