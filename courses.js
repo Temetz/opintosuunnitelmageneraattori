@@ -405,6 +405,24 @@ var courses = [{
   }
 ];
 
+var categories = [
+  {
+    id: 1,
+    name: 'Perusopinnot',
+  },
+  {
+    id: 2,
+    name: 'Ydinopinnot',
+  },
+  {
+    id: 3,
+    name: 'Valinnaiset',
+  }
+];
+
 define(function () {
-    return courses;
+    return { 
+      courses: courses,
+      categories: categories
+    };
 });
