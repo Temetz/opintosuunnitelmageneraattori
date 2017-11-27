@@ -1,8 +1,10 @@
-requirejs(["courses"], function(courses) {
-  setupCourses(courses);
+var categories;
+requirejs(["courses"], function(json) {
+  categories = json.categories;
+  setupCourses(json.courses);
   setupSortable();
   setupSearch();
-  setupAddBasicBtn();
+  setupButtons();
 });
 
 function calculateAndSetSum(element) {
@@ -99,17 +101,58 @@ function setupSearch() {
   });
 };
 
-function setupAddBasicBtn() {
-  $('#btnAddBasic')
-    .click(function(){
-      $('#sortable1')
-        .children("[data-category='1']")
-        .show()
-        .each(function(){
-          $('#sortable2').append(this);
+function setupButtons(){
+  $("#btnSaveAsImage").click(function() { 
+    html2canvas($("#selectedCoursesContainer"), {
+      onrendered: function(canvas) {
+        canvas.toBlob(function(blob) {
+          saveAs(blob, "opintosuunnitelmageneraattori.png"); 
         });
-
-      calculateAndSetSum($('#sortable2'));
-      calculateAndSetTotalSum();
+      }
     });
+  });
+  
+  $("#btnSaveAsText").click(function() { 
+    var exportTxt = `Opintosuunnitelmageneraattori - ${new Date()}\n`;
+    var selectedCourses = $('#sortable2, #sortable3, #sortable4')
+    .children()
+    .map(function(){
+      return { 
+        category: $(this).data('category'),
+        name: `${$(this).data('name')} (${$(this).data('points')} op)`
+      };
+    })
+    .toArray();
+    
+    for(var category = 1; category <= 3; category++){
+      exportTxt += '\n';
+      exportTxt += categories.find(function(c){
+        return c.id === category;
+      }).name;
+      exportTxt += '\n*********************\n';
+      
+      selectedCourses
+      .filter(function(course){
+        return course.category === category;
+      })
+      .forEach(function(course){
+        exportTxt += `${course.name}\n`;
+      });
+    }
+    
+    var file = new File([exportTxt], "opintosuunnitelmageneraattori.txt", {type: "text/plain;charset=utf-8"});
+    saveAs(file);
+  });
+  
+  $('#btnAddBasic').click(function(){
+    $('#sortable1')
+      .children("[data-category='1']")
+      .show()
+      .each(function(){
+        $('#sortable2').append(this);
+      });
+
+    calculateAndSetSum($('#sortable2'));
+    calculateAndSetTotalSum();
+  });
 };
