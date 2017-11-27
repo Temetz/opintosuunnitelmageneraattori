@@ -14,6 +14,7 @@
 <body>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.5/require.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
   <script src="generator.js"></script>
@@ -22,6 +23,11 @@
       <div class="panel panel-primary">
         <div class="panel-heading">Kurssitarjonta</div>
         <div class="panel-body">
+          <div class="form-group has-feedback">
+              <i class="glyphicon glyphicon-search form-control-feedback"></i>
+              <input type="text" id="search" class="form-control" placeholder="Haku..." />
+
+          </div>
           <ul class="list-group connectedSortable" id="sortable1">
           </ul>
         </div>
@@ -34,7 +40,7 @@
           <span class="float-right" id="total_points" data-points="0">0 op</span>
         </div>
         <div class="panel-body">
-          
+
           <!--- Cat1 -->
           <div class="panel panel-info">
             <div class="panel-heading">
@@ -46,7 +52,7 @@
               </ul>
             </div>
           </div>
-          
+
           <!--- Cat2 -->
           <div class="panel panel-info">
             <div class="panel-heading">
@@ -58,7 +64,7 @@
               </ul>
             </div>
           </div>
-          
+
           <!--- Cat3 -->
           <div class="panel panel-info">
             <div class="panel-heading">
@@ -70,7 +76,7 @@
               </ul>
             </div>
           </div>
-      
+
         </div>
       </div>
     </div>
