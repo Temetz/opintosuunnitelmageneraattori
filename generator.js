@@ -1,10 +1,15 @@
 var categories;
-requirejs(["courses"], function(json) {
-  categories = json.categories;
-  setupCourses(json.courses);
-  setupSortable();
-  setupSearch();
-  setupButtons();
+requirejs(["generator-api"], function(generatorApi) {
+  generatorApi.setupData
+  .then(function(basedata){
+    categories = basedata.categories;
+    setupCourses(basedata.courses);
+  })
+  .then(function(){
+    setupSortable();
+    setupSearch();
+    setupButtons();
+  });
 });
 
 function calculateAndSetSum(element) {
@@ -49,13 +54,13 @@ function handleSortableUpdate (event, ui) {
 
 function courseStyleByCategoryId(id) {
   switch(id){
-    case 1:
+    case 'b76cc5db-1798-481b-914d-eb0c13066935':
       return 'cat-style-basic';
       break;
-    case 2:
+    case '5006fbed-005d-4f1b-8088-540b1b297742':
       return 'cat-style-core';
       break;
-    case 3:
+    case '09df6ec4-c465-4669-93d3-b1dd297bbee5':
       return 'cat-style-optional';
       break;
     default:
@@ -74,7 +79,7 @@ function setupSortable () {
 function setupCourses(courses) {
   courses.forEach(function (course){
     $('#sortable1')
-    .append(`<li class="list-group-item ${courseStyleByCategoryId(course.category)}" data-name="${course.name}" data-category="${course.category}" data-points="${course.points}"><b>${course.name}</b> (${course.points} op)</li>`);
+    .append(`<li class="list-group-item ${courseStyleByCategoryId(course.category_uuid)}" data-name="${course.name}" data-category="${course.category_uuid}" data-points="${course.points}"><b>${course.name}</b> (${course.points} op)</li>`);
   });
 };
 
@@ -127,7 +132,7 @@ function setupButtons(){
     for(var category = 1; category <= 3; category++){
       exportTxt += '\n';
       exportTxt += categories.find(function(c){
-        return c.id === category;
+        return c.uuid === category;
       }).name;
       exportTxt += '\n*********************\n';
       
@@ -146,7 +151,7 @@ function setupButtons(){
   
   $('#btnAddBasic').click(function(){
     $('#sortable1')
-      .children("[data-category='1']")
+      .children("[data-category='b76cc5db-1798-481b-914d-eb0c13066935']")
       .show()
       .each(function(){
         $('#sortable2').append(this);
