@@ -1,9 +1,24 @@
 var categories;
+var RestApi;
+var dataToStore = {
+  surveyrole_uuid: null,
+  orientation_uuid: null,
+  categories: [],
+};
+
+var dataToStoreTemplate = {
+  surveyrole_uuid: null,
+  orientation_uuid: null,
+  categories: [],
+};
+
 requirejs(["generator-api"], function(generatorApi) {
+  RestApi = generatorApi;
   generatorApi.setupData
   .then(function(basedata){
     categories = basedata.categories;
     setupCourses(basedata.courses);
+    setupModal(basedata.orientations, basedata.surveyroles);
   })
   .then(function(){
     setupSortable();
@@ -69,6 +84,27 @@ function courseStyleByCategoryId(id) {
   }
 };
 
+function setupModal(orientations, surveyroles){
+  
+  orientations.forEach(function(orientation) {
+    $('#orientation').append(`<option value="${orientation.uuid}">${orientation.name}</option>`);
+  });
+  
+  $('#orientation').on('change', function(){
+    var selected = $(this).find("option:selected").val();
+    dataToStore.orientation_uuid = selected;
+  });
+ 
+  surveyroles.forEach(function(surveyrole) {
+    $('#surveyrole').append(`<option value="${surveyrole.uuid}">${surveyrole.name}</option>`);
+  });
+  
+  $('#surveyrole').on('change', function(){
+    var selected = $(this).find("option:selected").val();
+    dataToStore.surveyrole_uuid = selected;
+  });
+};
+
 function setupSortable () {
   $( "#sortable1, #sortable2, #sortable3, #sortable4" ).sortable({
       connectWith: ".connectedSortable",
@@ -79,7 +115,7 @@ function setupSortable () {
 function setupCourses(courses) {
   courses.forEach(function (course){
     $('#sortable1')
-    .append(`<li class="list-group-item ${courseStyleByCategoryId(course.category_uuid)}" data-name="${course.name}" data-category="${course.category_uuid}" data-points="${course.points}"><b>${course.name}</b> (${course.points} op)</li>`);
+    .append(`<li class="list-group-item ${courseStyleByCategoryId(course.category_uuid)}" data-name="${course.name}" data-courseid="${course.uuid}" data-category="${course.category_uuid}" data-points="${course.points}"><b>${course.name}</b> (${course.points} op)</li>`);
   });
 };
 
@@ -117,6 +153,53 @@ function setupButtons(){
     });
   });
   
+  $("#btnPrepareSaveToDatabase").click(function() {
+    var selectedCourses = {};
+
+    $('#sortable2, #sortable3, #sortable4')
+    .children()
+    .each(function(){
+      if (!selectedCourses[$(this).parent().data('categoryid')]) {
+        selectedCourses[$(this).parent().data('categoryid')] = [];
+      }
+      return this;
+    })
+    .each(function(){
+      selectedCourses[$(this).parent().data('categoryid')].push($(this).data('courseid'));
+    });
+    
+    Object
+      .keys(selectedCourses)
+      .forEach(function(key){
+        dataToStore.categories.push({
+          uuid: key,
+          courses: selectedCourses[key],
+        });
+      });
+    
+    $('#additionalInfoModal').modal('show');
+  });
+  
+  $("#btnSendToDatabase").click(function() {
+    if (dataToStore.surveyrole_uuid === "" || !dataToStore.surveyrole_uuid 
+    || dataToStore.orientation_uuid === "" || !dataToStore.orientation_uuid) {
+      alert('Valitse koulutusohjelma ja oma roolisi');
+      return;
+    }
+    
+    $('#additionalInfoModal').modal('hide');
+
+    RestApi.storeData(dataToStore)
+    .then(function(result){
+      dataToStore = dataToStoreTemplate;
+      $('#orientation').val('');
+      $('#surveyrole').val('');
+      $('#thanksModal').modal('show');
+    }, function(error){
+      console.log(error);
+    });    
+  });
+
   $("#btnSaveAsText").click(function() { 
     var exportTxt = `Opintosuunnitelmageneraattori - ${new Date()}\n`;
     var selectedCourses = $('#sortable2, #sortable3, #sortable4')
@@ -129,16 +212,14 @@ function setupButtons(){
     })
     .toArray();
     
-    for(var category = 1; category <= 3; category++){
+    for(var i = 0; i < categories.length; i++){
       exportTxt += '\n';
-      exportTxt += categories.find(function(c){
-        return c.uuid === category;
-      }).name;
+      exportTxt += categories[i].name;
       exportTxt += '\n*********************\n';
       
       selectedCourses
       .filter(function(course){
-        return course.category === category;
+        return course.category === categories[i].uuid;
       })
       .forEach(function(course){
         exportTxt += `${course.name}\n`;

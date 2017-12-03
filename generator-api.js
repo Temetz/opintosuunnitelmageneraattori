@@ -19,7 +19,27 @@ define(function () {
           reject(error)
         }
       });
-    })
+    }),
+    storeData: function(dataToStore) {
+      return new Promise(function(resolve, reject){
+        $.ajax({
+          url: `${apiUrl}/insertAnswer`,
+          type: 'POST',
+          headers: {
+            'x-api-key': apikey
+          },
+          data: JSON.stringify(dataToStore),
+          dataType: 'json',
+          contentType: 'application/json; charset=utf-8', 
+        })
+        .done(function (result) {
+          resolve(result)
+        })
+        .fail(function (error, foo, bar) {
+          reject(error)
+        });
+      });
+    },
   };
 });
 
