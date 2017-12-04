@@ -40,6 +40,23 @@ define(function () {
         });
       });
     },
+    fetchResultsOrientation: new Promise(function(resolve, reject){
+      $.ajax({
+        url: `${apiUrl}/fetchResults?type=orientation`,
+        type: 'GET',
+        dataType: 'json',
+        headers: {
+          'x-api-key': apikey
+        },
+        contentType: 'application/json; charset=utf-8',
+        success: function (result) {
+          resolve(result)
+        },
+        error: function (error) {
+          reject(error)
+        }
+      });
+    }),
   };
 });
 
