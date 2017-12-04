@@ -101,3 +101,8 @@ body {
 .cat-style-default {
   background-color: #F6F4F1;
 }
+
+#cyGraph {
+  width: 100vw;
+  height: 90vh;
+}
