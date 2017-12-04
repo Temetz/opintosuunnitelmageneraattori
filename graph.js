@@ -4,7 +4,6 @@ var graphStyle;
 
 requirejs(["generator-api", "graph-style"], function(generatorApi, graphstyles) {
   graphStyle = graphstyles;
-  
   generatorApi.fetchResultsOrientation
   .then(function(resultsData){
     baseData = resultsData;
